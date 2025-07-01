@@ -102,16 +102,22 @@ router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
     const conference_id = req.params.id;
     const { title, description, start_date, end_date, submission_deadline, status } = req.body;
 
+    // Only include fields that are provided to avoid overwriting with null
+    const updateData = {};
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (start_date !== undefined) updateData.start_date = start_date;
+    if (end_date !== undefined) updateData.end_date = end_date;
+    if (submission_deadline !== undefined) updateData.submission_deadline = submission_deadline;
+    if (status !== undefined) updateData.status = status;
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: 'No fields provided for update' });
+    }
+
     const { data: conference, error } = await supabase
       .from('conferences')
-      .update({
-        title,
-        description,
-        start_date,
-        end_date,
-        submission_deadline,
-        status
-      })
+      .update(updateData)
       .eq('id', conference_id)
       .select('id, title, description, start_date, end_date, submission_deadline, status')
       .single();
