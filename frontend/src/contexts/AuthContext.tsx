@@ -33,7 +33,12 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null/*{
+    id: 'hemnaniishan',
+    email: 'hemnaniishan@gmail.com',
+    name: 'Ishan Hemnani',
+    role: 'reviewer',
+  }*/);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
